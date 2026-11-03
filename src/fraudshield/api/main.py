@@ -9,29 +9,39 @@ from fraudshield.api.routers import (
     history,
     statistics
 )
+
 from fraudshield.api.services.prediction_service import (
     PredictionService
 )
-from fraudshield.config import MODEL_CONFIG
-from fraudshield.model_io import load_model
+
+from fraudshield.registry_loader import (
+    load_registered_model_info
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("=== FRAUDSHIELD AI — STARTUP ===")
 
-    print("Carregando modelo FraudShield AI...")
+    print("Carregando modelo do MLflow Registry...")
 
-    model = load_model(
-        MODEL_CONFIG.model_path
-    )
+    registered = load_registered_model_info()
 
     app.state.prediction_service = PredictionService(
-        model=model
+        model=registered.model,
+        model_version=registered.version
     )
 
-    print("Modelo carregado com sucesso!")
+    app.state.model_version = registered.version
+
+    print(
+        f"Modelo carregado! "
+        f"Versão MLflow: {registered.version}"
+    )
 
     yield
+
+    print("Encerrando FraudShield AI...")
 
     app.state.prediction_service = None
 
@@ -45,7 +55,6 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
-
 
 app.include_router(health.router)
 app.include_router(predictions.router)

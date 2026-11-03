@@ -1,6 +1,16 @@
 
-from pathlib import Path
-from fraudshield.config import MODEL_CONFIG
+from sklearn.metrics import (
+    average_precision_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score
+)
+
+from fraudshield.config import (
+    MODEL_CONFIG,
+    PROJECT_ROOT
+)
 
 from fraudshield.data import (
     load_dataset,
@@ -10,32 +20,27 @@ from fraudshield.data import (
 
 from fraudshield.training import (
     build_model,
-    train_model,
-    evaluate_model
+    train_model
 )
 
 from fraudshield.model_io import save_model
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-DATA_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-    / "creditcard.csv"
+from fraudshield.tracking import (
+    configure_tracking,
+    log_model_experiment
 )
-
-MODEL_PATH = MODEL_CONFIG.model_path
 
 
 def main():
-    print("=== FRAUDSHIELD AI — TREINAMENTO ===")
+    print("=== FRAUDSHIELD AI — TRAINING PIPELINE ===")
 
-    # 1. Carregar dataset
-    print("\n[1/5] Carregando dataset...")
+    dataset_path = (
+        PROJECT_ROOT / "data" / "raw" / "creditcard.csv"
+    )
 
-    df = load_dataset(DATA_PATH)
+    print("\n1. Carregando dataset...")
+
+    df = load_dataset(dataset_path)
 
     X, y = split_features_target(df)
 
@@ -46,21 +51,17 @@ def main():
         y_train,
         y_val,
         y_test
-    ) = split_dataset(X, y)
+    ) = split_dataset(
+        X,
+        y,
+        random_state=MODEL_CONFIG.random_state
+    )
 
-    print(f"Treino: {len(X_train)} transações")
-    print(f"Validação: {len(X_val)} transações")
-    print(f"Teste reservado: {len(X_test)} transações")
-
-    # 2. Criar modelo
-    print("\n[2/5] Criando modelo...")
+    print("\n2. Construindo modelo...")
 
     model = build_model(y_train)
 
-    print(model)
-
-    # 3. Treinar modelo
-    print("\n[3/5] Treinando XGBoost...")
+    print("\n3. Treinando XGBoost...")
 
     model = train_model(
         model,
@@ -68,35 +69,81 @@ def main():
         y_train
     )
 
-    print("Treinamento concluído!")
+    print("\n4. Avaliando na validação...")
 
-    # 4. Avaliar na validação
-    print("\n[4/5] Avaliando modelo...")
+    probabilities = model.predict_proba(
+        X_val
+    )[:, 1]
 
-    metrics = evaluate_model(
+    predictions = (
+        probabilities >= MODEL_CONFIG.threshold
+    ).astype(int)
+
+    metrics = {
+        "validation_average_precision": float(
+            average_precision_score(
+                y_val,
+                probabilities
+            )
+        ),
+        "validation_precision": float(
+            precision_score(
+                y_val,
+                predictions,
+                zero_division=0
+            )
+        ),
+        "validation_recall": float(
+            recall_score(
+                y_val,
+                predictions,
+                zero_division=0
+            )
+        ),
+        "validation_f1": float(
+            f1_score(
+                y_val,
+                predictions,
+                zero_division=0
+            )
+        ),
+        "validation_roc_auc": float(
+            roc_auc_score(
+                y_val,
+                probabilities
+            )
+        )
+    }
+
+    for name, value in metrics.items():
+        print(f"{name}: {value:.6f}")
+
+    print("\n5. Salvando modelo...")
+
+    save_model(
         model,
-        X_val,
-        y_val
+        MODEL_CONFIG.model_path
     )
 
-    print("\n=== RESUMO ===")
     print(
-        f"Average Precision: "
-        f"{metrics['average_precision']:.4f}"
-    )
-    print(
-        f"ROC-AUC: "
-        f"{metrics['roc_auc']:.4f}"
+        f"Modelo salvo em: {MODEL_CONFIG.model_path}"
     )
 
-    # 5. Salvar modelo
-    print("\n[5/5] Salvando modelo...")
+    print("\n6. Registrando no MLflow...")
 
-    save_model(model, MODEL_PATH)
+    configure_tracking()
 
-    print("\n=== TREINAMENTO FINALIZADO ===")
-    print("Pipeline executado com sucesso!")
-    print(f"Modelo disponível em: {MODEL_PATH}")
+    run_id = log_model_experiment(
+        model=model,
+        metrics=metrics,
+        model_path=MODEL_CONFIG.model_path,
+        threshold=MODEL_CONFIG.threshold,
+        run_name="xgboost-training-pipeline-v1"
+    )
+
+    print("\nTreinamento concluído!")
+    print(f"MLflow Run ID: {run_id}")
+    print("Tracking UI: http://127.0.0.1:5000")
 
 
 if __name__ == "__main__":

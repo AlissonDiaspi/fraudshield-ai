@@ -4,74 +4,83 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from xgboost import XGBClassifier
 
+from fraudshield.config import MODEL_CONFIG
+from fraudshield.inference import predict_fraud
+
 from fraudshield.api.schemas import (
     PredictionRequest,
-    PredictionResponse
+    PredictionResponse,
 )
-from fraudshield.config import MODEL_CONFIG
-from fraudshield.database.models import Prediction
-from fraudshield.inference import predict_fraud
+
+from fraudshield.database.repositories.prediction_repository import (
+    PredictionRepository,
+)
 
 
 class PredictionService:
-
     def __init__(
         self,
-        model: XGBClassifier
+        model: XGBClassifier,
+        model_version: str | None = None,
     ):
         self.model = model
+
+        self.model_version = (
+            model_version
+            if model_version is not None
+            else MODEL_CONFIG.model_version
+        )
 
     def predict(
         self,
         payload: PredictionRequest,
-        db: Session
+        db: Session,
     ) -> PredictionResponse:
-
-        transaction = pd.DataFrame(
+        transactions = pd.DataFrame(
             [payload.features]
         )
 
-        result = predict_fraud(
+        results = predict_fraud(
             model=self.model,
-            transactions=transaction,
-            threshold=MODEL_CONFIG.threshold
+            transactions=transactions,
+            threshold=MODEL_CONFIG.threshold,
         )
 
         fraud_score = float(
-            result.iloc[0]["fraud_score"]
+            results.iloc[0]["fraud_score"]
         )
 
         prediction = int(
-            result.iloc[0]["prediction"]
+            results.iloc[0]["prediction"]
         )
 
-        record = Prediction(
-            features=payload.features,
-            fraud_score=fraud_score,
-            prediction=prediction,
-            threshold=MODEL_CONFIG.threshold,
-            model_version=MODEL_CONFIG.model_version
-        )
-
-        db.add(record)
+        repository = PredictionRepository(db)
 
         try:
+            prediction_record = repository.create(
+                features=payload.features,
+                fraud_score=fraud_score,
+                prediction=prediction,
+                threshold=MODEL_CONFIG.threshold,
+                model_version=self.model_version,
+            )
+
             db.commit()
-            db.refresh(record)
+            db.refresh(prediction_record)
 
         except Exception:
             db.rollback()
             raise
 
         return PredictionResponse(
-            id=record.id,
-            fraud_score=record.fraud_score,
-            prediction=record.prediction,
+            id=prediction_record.id,
+            fraud_score=fraud_score,
+            prediction=prediction,
             classification=(
                 "fraud"
-                if record.prediction == 1
+                if prediction == 1
                 else "legitimate"
             ),
-            threshold=record.threshold,
-            model_version=record.model_version
+            threshold=MODEL_CONFIG.threshold,
+            model_version=self.model_version,
         )

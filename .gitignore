@@ -37,3 +37,6 @@ mlartifacts/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# MLflow
+/mlflow/artifacts/
