@@ -1,6 +1,5 @@
 
 import os
-
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -19,28 +18,28 @@ DATABASE_URL = URL.create(
     drivername="postgresql+psycopg",
     username=os.environ["POSTGRES_USER"],
     password=os.environ["POSTGRES_PASSWORD"],
-    host="127.0.0.1",
-    port=5433,
-    database=os.environ["POSTGRES_DB"]
+    host=os.getenv("POSTGRES_HOST", "127.0.0.1"),
+    port=int(os.getenv("POSTGRES_PORT", "5433")),
+    database=os.environ["POSTGRES_DB"],
 )
 
 
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True
+    pool_pre_ping=True,
 )
 
 
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,
-    expire_on_commit=False
+    expire_on_commit=False,
 )
 
 
 def get_db():
     """
-    Fornece uma sessão do banco
+    Fornece uma sessão do banco de dados
     para cada requisição.
     """
 
