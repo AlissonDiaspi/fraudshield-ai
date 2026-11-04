@@ -182,7 +182,7 @@ A aplicação não foi projetada para tomar decisões financeiras reais sem vali
 
 **Alisson Dias Pinheiro**
 
-Graduando em Ciência da Computação | Engenharia de Software | Machine Learning & AI Engineering
+Graduando em Ciência da Computação | Machine Learning & AI Engineering
 
 GitHub: https://github.com/AlissonDiaspi
 
