@@ -150,19 +150,6 @@ O Prometheus coleta métricas de monitoramento disponibilizadas pelos serviços 
 
 O projeto também utiliza o MLflow para rastrear experimentos de Machine Learning e gerenciar versões dos modelos.
 
-## Testes e Integração Contínua
-
-O repositório possui verificações automatizadas configuradas por meio do GitHub Actions.
-
-A pipeline de integração contínua contempla:
-
-- Testes do backend Python.
-- Testes do frontend.
-- Verificação de tipos com TypeScript.
-- Build de produção do Next.js.
-- Validação da configuração do Docker Compose.
-
-A pipeline de integração contínua não realiza a implantação da aplicação.
 
 ## Escopo do Projeto
 
