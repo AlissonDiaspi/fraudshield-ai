@@ -144,6 +144,7 @@ def main():
     print("\nTreinamento concluído!")
     print(f"MLflow Run ID: {run_id}")
     print("Tracking UI: http://127.0.0.1:5000")
+    return run_id
 
 
 if __name__ == "__main__":

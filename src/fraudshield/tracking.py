@@ -5,15 +5,21 @@ import mlflow
 import mlflow.xgboost
 
 from xgboost import XGBClassifier
+import os
 
 
 EXPERIMENT_NAME = "fraudshield-xgboost"
 
 
 def configure_tracking(
-    tracking_uri: str = "http://127.0.0.1:5000"
+    tracking_uri: str | None = None
 ) -> None:
-    mlflow.set_tracking_uri(tracking_uri)
+    uri = tracking_uri or os.getenv(
+        "MLFLOW_TRACKING_URI",
+        "http://127.0.0.1:5000"
+    )
+
+    mlflow.set_tracking_uri(uri)
     mlflow.set_experiment(EXPERIMENT_NAME)
 
 

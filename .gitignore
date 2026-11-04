@@ -1,3 +1,8 @@
+
+# ==========================================
+# FraudShield AI - .gitignore
+# ==========================================
+
 # Python
 __pycache__/
 *.py[cod]
@@ -5,17 +10,22 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
 
-# Ambiente virtual
+# Ambientes virtuais
 .venv/
 venv/
+env/
 
-# Variáveis de ambiente
+# Variáveis de ambiente e segredos
 .env
 .env.*
 !.env.example
 
-# Jupyter
+# Jupyter Notebook
 .ipynb_checkpoints/
 
 # Datasets
@@ -24,19 +34,51 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# Modelos e artefatos
+# Modelos e artefatos de Machine Learning
 artifacts/
 models/
 mlruns/
 mlartifacts/
 
-# IDE
+# MLflow - banco e artefatos persistentes
+/mlflow.db
+/mlflow.db-shm
+/mlflow.db-wal
+/mlflow-artifacts/
+/mlflow/artifacts/
+
+# Bancos SQLite locais
+*.sqlite
+*.sqlite3
+
+# Next.js / Node.js
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testes e cobertura do frontend
+coverage/
+playwright-report/
+test-results/
+
+# IDEs e editores
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
 
 # Sistema operacional
 .DS_Store
 Thumbs.db
-
-# MLflow
-/mlflow/artifacts/
+desktop.ini

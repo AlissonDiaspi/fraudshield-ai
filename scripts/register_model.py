@@ -2,6 +2,7 @@
 import argparse
 
 import mlflow
+import os
 
 from fraudshield.registry import (
     REGISTERED_MODEL_NAME,
@@ -11,7 +12,10 @@ from fraudshield.registry import (
 )
 
 
-TRACKING_URI = "http://127.0.0.1:5000"
+TRACKING_URI = os.getenv(
+    "MLFLOW_TRACKING_URI",
+    "http://127.0.0.1:5000"
+)
 
 
 def main():
