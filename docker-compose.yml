@@ -1,5 +1,8 @@
 
 services:
+  # ==========================================
+  # POSTGRESQL
+  # ==========================================
   postgres:
     image: postgres:16-alpine
     container_name: fraudshield-postgres
@@ -24,6 +27,9 @@ services:
       timeout: 5s
       retries: 5
 
+  # ==========================================
+  # APACHE KAFKA
+  # ==========================================
   kafka:
     image: apache/kafka:4.1.0
     container_name: fraudshield-kafka
@@ -60,7 +66,7 @@ services:
       KAFKA_NUM_PARTITIONS: 3
 
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      
+
       KAFKA_LOG_DIRS: "/var/lib/kafka/data"
 
     volumes:
@@ -77,6 +83,79 @@ services:
       retries: 10
       start_period: 30s
 
+  # ==========================================
+  # PROMETHEUS
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: fraudshield-prometheus
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:9090:9090"
+
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - fraudshield_prometheus_data:/prometheus
+
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -q
+        - -O
+        - /dev/null
+        - http://localhost:9090/-/healthy
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ==========================================
+  # GRAFANA
+  # ==========================================
+  grafana:
+    image: grafana/grafana:12.1.1
+    container_name: fraudshield-grafana
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:3000:3000"
+
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Defina GRAFANA_ADMIN_PASSWORD no .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+
+    volumes:
+      - fraudshield_grafana_data:/var/lib/grafana
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+    depends_on:
+      prometheus:
+        condition: service_started
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -q -O /dev/null http://localhost:3000/api/health
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+# ==========================================
+# VOLUMES PERSISTENTES
+# ==========================================
 volumes:
   fraudshield_postgres_data:
   fraudshield_kafka_data:
+  fraudshield_prometheus_data:
+  fraudshield_grafana_data:

@@ -11,6 +11,7 @@ from fraudshield.database.repositories.prediction_repository import (
 from fraudshield.database.repositories.outbox_repository import (
     OutboxRepository,
 )
+from fraudshield.monitoring.service import MonitoringService
 from fraudshield.streaming.config import KAFKA_CONFIG
 from fraudshield.streaming.inference_service import (
     StreamingInferenceService,
@@ -28,8 +29,10 @@ class StreamingPersistenceService:
     def __init__(
         self,
         inference_service: StreamingInferenceService,
+        monitoring_service: MonitoringService | None = None,
     ):
         self.inference_service = inference_service
+        self.monitoring = monitoring_service or MonitoringService()
 
     @staticmethod
     def _prediction_from_record(record) -> PredictionEvent:
@@ -40,10 +43,7 @@ class StreamingPersistenceService:
             model_version=record.model_version,
         )
 
-    def process(
-        self,
-        event: TransactionEvent,
-    ) -> PredictionEvent:
+    def process(self, event: TransactionEvent) -> PredictionEvent:
         with SessionLocal() as db:
             predictions = PredictionRepository(db)
             outbox = OutboxRepository(db)
@@ -54,12 +54,8 @@ class StreamingPersistenceService:
                 )
 
                 if existing is not None:
-                    result = self._prediction_from_record(
-                        existing
-                    )
+                    result = self._prediction_from_record(existing)
 
-                    # Também cobre previsões salvas antes
-                    # da implementação da outbox.
                     pending = outbox.get_by_event_and_topic(
                         event.event_id,
                         KAFKA_CONFIG.predicted_topic,
@@ -71,6 +67,7 @@ class StreamingPersistenceService:
                             topic=KAFKA_CONFIG.predicted_topic,
                             payload=result.model_dump(mode="json"),
                         )
+
                         db.commit()
 
                     logger.info(
@@ -78,11 +75,12 @@ class StreamingPersistenceService:
                         event.event_id,
                     )
 
+                    # Evento duplicado: não contamos novamente.
                     return result
 
-                result = self.inference_service.predict(
-                    event
-                )
+                # Mede somente a execução da inferência.
+                with self.monitoring.track_inference():
+                    result = self.inference_service.predict(event)
 
                 predictions.create(
                     event_id=event.event_id,
@@ -99,8 +97,12 @@ class StreamingPersistenceService:
                     payload=result.model_dump(mode="json"),
                 )
 
-                # Commit único: previsão + outbox.
                 db.commit()
+
+                # Contabiliza somente após persistência.
+                self.monitoring.record_prediction(
+                    result.prediction
+                )
 
                 logger.info(
                     "Previsão e outbox persistidas: event_id=%s",
@@ -112,7 +114,6 @@ class StreamingPersistenceService:
             except IntegrityError:
                 db.rollback()
 
-                # Possível corrida entre consumers.
                 existing = predictions.get_by_event_id(
                     event.event_id
                 )
@@ -126,9 +127,6 @@ class StreamingPersistenceService:
                 )
 
                 if pending is None:
-                    # A outra transação pode ter sido criada
-                    # por um fluxo legado. A próxima entrega
-                    # poderá tentar criar a outbox.
                     raise
 
                 logger.info(
@@ -136,9 +134,9 @@ class StreamingPersistenceService:
                     event.event_id,
                 )
 
-                return self._prediction_from_record(
-                    existing
-                )
+                # Outro consumer persistiu primeiro.
+                # Não duplicamos a métrica de processamento.
+                return self._prediction_from_record(existing)
 
             except Exception:
                 db.rollback()

@@ -44,3 +44,37 @@ class PredictionRepository:
         self.db.flush()
 
         return record
+
+    def get_recent_features(
+        self,
+        limit: int = 1000,
+        model_version: str | None = None,
+    ) -> list[dict]:
+        """
+        Recupera as features das previsões
+        mais recentes, sem carregar os modelos
+        ORM completos.
+        """
+
+        if limit < 1:
+            raise ValueError(
+                "limit deve ser maior que zero."
+            )
+
+        statement = select(
+            Prediction.features
+        )
+
+        if model_version is not None:
+            statement = statement.where(
+                Prediction.model_version == model_version
+            )
+
+        statement = statement.order_by(
+            Prediction.created_at.desc(),
+            Prediction.id.desc(),
+        ).limit(limit)
+
+        return list(
+            self.db.scalars(statement).all()
+        )
