@@ -26,7 +26,7 @@ def main():
         y_test
     ) = split_dataset(X, y)
 
-    print("=== DIVISÃO DO DATASET ===")
+    print("Divisão do dataset:")
 
     for name, features, target in [
         ("Treino", X_train, y_train),

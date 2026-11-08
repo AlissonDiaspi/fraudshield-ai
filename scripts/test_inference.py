@@ -23,7 +23,7 @@ MODEL_PATH = MODEL_CONFIG.model_path
 
 
 def main():
-    print("=== FRAUDSHIELD AI — INFERÊNCIA ===")
+    print("Inferência")
 
     print("\n[1/3] Carregando modelo...")
 
@@ -73,7 +73,7 @@ def main():
 
     results["actual_class"] = y_val.loc[results.index]
 
-    print("\n=== RESULTADOS ===")
+    print("\nResultados:")
     print(results.to_string())
 
     print("\nInferência concluída com sucesso!")

@@ -255,7 +255,7 @@ def evaluate_checkpoint(
         ),
     }
 
-    print("\n=== FRAUDSHIELD AI — PYTORCH TEST ===")
+    print("\nPytorch Test")
 
     print("Checkpoint:", checkpoint_file)
     print("Melhor época:", checkpoint["best_epoch"])
@@ -266,7 +266,7 @@ def evaluate_checkpoint(
     print("Threshold:", threshold)
     print("Amostras de teste:", len(y_true))
 
-    print("\n=== CLASSIFICATION REPORT ===")
+    print("\n classification report:")
 
     print(
         classification_report(
@@ -277,7 +277,7 @@ def evaluate_checkpoint(
         )
     )
 
-    print("\n=== MATRIZ DE CONFUSÃO ===")
+    print("\n Matriz de Confusão:")
 
     print(
         confusion_matrix(
@@ -287,7 +287,7 @@ def evaluate_checkpoint(
         )
     )
 
-    print("\n=== MÉTRICAS ===")
+    print("\nMétricas:")
 
     for name, value in metrics.items():
         print(f"{name}: {value:.5f}")

@@ -20,7 +20,7 @@ def main():
     event_id = uuid.uuid4()
     record_id = None
 
-    print("\n=== TESTE DE INTEGRAÇÃO: OUTBOX BACKOFF ===")
+    print("\nOutbox Backoff")
 
     # 1. Criar um evento real no PostgreSQL.
     with SessionLocal() as db:

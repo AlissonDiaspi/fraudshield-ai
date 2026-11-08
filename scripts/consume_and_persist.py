@@ -156,7 +156,7 @@ def main():
         )
 
         print("\n" + "=" * 55)
-        print("FRAUDSHIELD - PREVISAO PERSISTIDA")
+        print("Revisão persistida")
         print("=" * 55)
         print(f"Event ID: {result.event_id}")
         print(f"Fraud Score: {result.fraud_score:.6f}")

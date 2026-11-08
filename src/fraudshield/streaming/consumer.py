@@ -92,7 +92,7 @@ class TransactionConsumer:
         )
 
         # Se a publicação falhar, a exceção será propagada.
-        # Assim, não confirmaremos o offset original.
+        # Assim, não será confirmado o offset original.
         self.dlq_producer.publish(event)
 
     def start(

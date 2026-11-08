@@ -67,7 +67,7 @@ def main() -> None:
     )
 
     print(
-        "\n=== FRAUDSHIELD AI - SIMULACAO DE DRIFT ==="
+        "\nSimulacao de drift"
     )
 
     print("\nCenario 1 - Distribuicao semelhante")

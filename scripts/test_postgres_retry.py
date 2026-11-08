@@ -55,7 +55,7 @@ def main():
     )
 
     print("\n" + "=" * 55)
-    print("FRAUDSHIELD AI - POSTGRESQL RETRY TEST")
+    print("Postgre retry test")
     print("=" * 55)
     print(f"Resultado SQL: {result}")
     print(f"Total de tentativas: {service.attempts}")

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -15,7 +16,6 @@ import {
   Menu,
   ScanLine,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +35,7 @@ const navigation = [
   { href: "/transactions", title: "Histórico", icon: ListFilter },
   { href: "/system", title: "Status do sistema", icon: Activity },
 ];
+
 function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <Link
@@ -56,6 +57,7 @@ function Brand({ compact = false }: { compact?: boolean }) {
     </Link>
   );
 }
+
 function Navigation({
   compact,
   onNavigate,
@@ -64,10 +66,12 @@ function Navigation({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+
   return (
     <nav aria-label="Navegação principal" className="space-y-2">
       {navigation.map(({ href, title, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
+
         const link = (
           <Link
             href={href}
@@ -91,6 +95,7 @@ function Navigation({
             {compact && <span className="sr-only">{title}</span>}
           </Link>
         );
+
         return compact ? (
           <Tooltip key={href} content={title}>
             {link}
@@ -102,24 +107,29 @@ function Navigation({
     </nav>
   );
 }
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+
   const current =
     navigation.find((item) => pathname.startsWith(item.href))?.title ??
     "Visão geral";
+
   return (
     <TooltipProvider delayDuration={200}>
       <HealthProvider>
         <a href="#main-content" className="skip-link">
           Ir para o conteúdo
         </a>
+
         <div className={cn("app-shell", collapsed && "sidebar-collapsed")}>
           <aside className="desktop-sidebar">
             <div className="px-5 pt-8">
               <Brand compact={collapsed} />
             </div>
+
             <div className="mt-11 px-4">
               {!collapsed && (
                 <p className="mb-4 px-3 text-[10px] font-medium uppercase tracking-[.18em] text-muted-foreground/70">
@@ -128,10 +138,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )}
               <Navigation compact={collapsed} />
             </div>
+
             <div className="mt-auto px-4 pb-5">
               {!collapsed && (
                 <div className="mb-5 rounded-xl border border-primary/10 bg-primary/[.035] p-4">
-                  <Sparkles className="mb-3 size-5 text-primary" />
                   <p className="text-xs font-medium">
                     Decisões com inteligência.
                   </p>
@@ -147,6 +157,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </Link>
                 </div>
               )}
+
               <div
                 className={cn(
                   "flex items-center gap-3 border-t border-border pt-5",
@@ -156,6 +167,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-border bg-accent text-primary">
                   <Command className="size-4" />
                 </div>
+
                 {!collapsed && (
                   <div className="flex-1">
                     <p className="text-xs font-medium">Workspace operacional</p>
@@ -165,6 +177,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </div>
                 )}
               </div>
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -183,6 +196,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Button>
             </div>
           </aside>
+
           <div className="workspace">
             <header className="app-header">
               <div className="flex min-w-0 items-center gap-3">
@@ -197,6 +211,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <Menu />
                     </Button>
                   </SheetTrigger>
+
                   <SheetContent>
                     <SheetTitle className="sr-only">
                       Navegação FraudShield AI
@@ -204,12 +219,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <SheetDescription className="sr-only">
                       Acesse as páginas da plataforma.
                     </SheetDescription>
+
                     <div className="mb-10 mt-5">
                       <Brand />
                     </div>
+
                     <Navigation onNavigate={() => setMobileOpen(false)} />
                   </SheetContent>
                 </Sheet>
+
                 <span className="hidden text-xs text-muted-foreground sm:inline">
                   Workspace
                 </span>
@@ -220,6 +238,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     : current}
                 </span>
               </div>
+
               <div className="flex shrink-0 items-center gap-4">
                 <ApiStatus />
                 <span className="hidden h-5 w-px bg-border sm:block" />
@@ -228,9 +247,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </span>
               </div>
             </header>
+
             <main id="main-content" tabIndex={-1} className="main-content">
               {children}
             </main>
+
             <footer className="app-footer">
               <span>
                 FraudShield AI<span className="mx-2 text-border">/</span>

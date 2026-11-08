@@ -30,7 +30,7 @@ def main():
     producer.publish(event)
 
     print("\n" + "=" * 50)
-    print("FRAUDSHIELD AI - TESTE DLQ")
+    print("TESTE DLQ")
     print("=" * 50)
     print("Mensagem publicada com sucesso!")
     print(f"Event ID: {event.event_id}")

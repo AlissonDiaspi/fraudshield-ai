@@ -82,7 +82,7 @@ def evaluate_model(
         probabilities
     )
 
-    print("\n=== CLASSIFICATION REPORT ===")
+    print("\n CLASSIFICATION REPORT ")
 
     print(classification_report(
         y_val,

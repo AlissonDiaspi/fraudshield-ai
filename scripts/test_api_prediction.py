@@ -20,7 +20,7 @@ API_URL = "http://127.0.0.1:8000/predict"
 
 
 def main():
-    print("=== FRAUDSHIELD AI — TESTE DA API ===")
+    print("Teste da API")
 
     df = load_dataset(DATA_PATH)
 

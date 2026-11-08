@@ -6,9 +6,9 @@ from prometheus_client import (
 )
 
 
-# ==========================================
+
 # METRICAS DE INFERENCIA
-# ==========================================
+
 
 TRANSACTIONS_PROCESSED = Counter(
     "fraudshield_transactions_processed_total",
@@ -50,9 +50,9 @@ INFERENCE_IN_PROGRESS = Gauge(
 )
 
 
-# ==========================================
+
 # METRICAS DE DATA DRIFT
-# ==========================================
+
 
 DATA_DRIFT_PSI = Gauge(
     "fraudshield_data_drift_psi",

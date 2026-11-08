@@ -39,7 +39,7 @@ RESULTS_PATH = (
 
 
 def main():
-    print("=== FRAUDSHIELD AI — AVALIAÇÃO FINAL ===")
+    print("Avaliação final")
 
     print("\n[1/4] Carregando dataset...")
 

@@ -67,7 +67,7 @@ def main() -> None:
         print("Nenhuma alteração realizada.")
         return
 
-    print("\nIniciando treinamento...")
+    
 
     run_id = train_main()
 
@@ -88,7 +88,7 @@ def main() -> None:
 
     champion = get_champion_version()
 
-    print("\nBootstrap concluído!")
+    print("\nBootstrap concluído")
     print(f"Modelo: {REGISTERED_MODEL_NAME}")
     print(f"Versão champion: {champion.version}")
     print(f"Run ID: {champion.run_id}")

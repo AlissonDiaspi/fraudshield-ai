@@ -35,7 +35,7 @@ def main():
     args = parser.parse_args()
 
     print(
-        "=== FRAUDSHIELD AI — MODEL REGISTRY ==="
+        "Model Registry"
     )
 
     mlflow.set_tracking_uri(TRACKING_URI)
@@ -52,8 +52,7 @@ def main():
 
     print(f"Versão criada: {version}")
 
-    # Nesta etapa, estamos promovendo
-    # explicitamente nossa versão inicial.
+    
     print("\nDefinindo alias champion...")
 
     set_champion_alias(

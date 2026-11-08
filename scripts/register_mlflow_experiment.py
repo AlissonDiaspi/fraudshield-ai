@@ -123,7 +123,7 @@ def main():
         threshold=MODEL_CONFIG.threshold
     )
 
-    print("\nExperimento registrado!")
+    print("\nExperimento registrado")
 
     print(f"Run ID: {run_id}")
 

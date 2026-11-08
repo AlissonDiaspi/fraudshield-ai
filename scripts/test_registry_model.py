@@ -28,7 +28,7 @@ from fraudshield.inference import predict_fraud
 
 def main():
     print(
-        "=== FRAUDSHIELD AI — REGISTRY MODEL TEST ==="
+        "Registry model test"
     )
 
     print("\n1. Carregando modelo do Registry...")

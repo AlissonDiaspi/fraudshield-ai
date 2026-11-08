@@ -34,7 +34,7 @@ def main() -> None:
     inference_service = StreamingInferenceService.from_registry()
 
     print(
-        f"Modelo carregado! Versão: "
+        f"Modelo carregado, Versão: "
         f"{inference_service.model_version}"
     )
 
@@ -48,7 +48,7 @@ def main() -> None:
         )
 
         print("\n" + "=" * 55)
-        print("FRAUDSHIELD AI - ANÁLISE EM TEMPO REAL")
+        print("Analise")
         print("=" * 55)
 
         print(f"Event ID: {result.event_id}")

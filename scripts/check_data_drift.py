@@ -63,9 +63,7 @@ def main() -> None:
         min_samples=args.min_samples,
     )
 
-    print(
-        "\n=== FRAUDSHIELD AI - DATA DRIFT ==="
-    )
+    
 
     print(
         f"Transações analisadas: "
@@ -87,7 +85,7 @@ def main() -> None:
             f"{report['moderate_features']}"
         )
 
-        print("\n=== RESULTADOS POR FEATURE ===")
+        print("\n Resultados por Feature:")
 
         for feature, result in (
             report["features"].items()

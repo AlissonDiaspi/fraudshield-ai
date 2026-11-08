@@ -34,7 +34,7 @@ def main() -> None:
     )
 
     print("\n" + "=" * 50)
-    print("FRAUDSHIELD AI - OUTBOX PUBLISHER")
+    print("Outbox Publisher:")
     print("=" * 50)
     print(f"Publicados: {published}")
     print(f"Falhas: {failed}")

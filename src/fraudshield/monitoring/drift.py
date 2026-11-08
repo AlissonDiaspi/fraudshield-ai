@@ -78,7 +78,7 @@ def calculate_psi(
         ])
 
     else:
-        # Incluímos também valores fora do intervalo
+        # Incluido também valores fora do intervalo
         # observado no treinamento.
         edges[0] = -np.inf
         edges[-1] = np.inf

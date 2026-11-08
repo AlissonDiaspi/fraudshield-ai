@@ -1,7 +1,7 @@
 
-# ==========================================
+
 # DEPENDENCIES
-# ==========================================
+
 FROM node:24-alpine AS deps
 
 WORKDIR /app
@@ -27,9 +27,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 
-# ==========================================
+
 # PRODUCTION
-# ==========================================
+
 FROM node:24-alpine AS runner
 
 WORKDIR /app

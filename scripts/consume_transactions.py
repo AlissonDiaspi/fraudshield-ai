@@ -14,7 +14,7 @@ logging.basicConfig(
 
 def handle_transaction(event: TransactionEvent) -> None:
     print("\n" + "=" * 50)
-    print("TRANSAÇÃO RECEBIDA")
+    print("transação recebida")
     print("=" * 50)
 
     print(f"Event ID: {event.event_id}")

@@ -365,19 +365,7 @@ def main():
         PYTORCH_METRICS,
     )
 
-    print("\n=== OBSERVAÇÕES ===")
-    print(
-        "A comparação utiliza o mesmo conjunto "
-        "de teste e threshold de 0.5."
-    )
-    print(
-        "É necessário confirmar que o treinamento "
-        "original do XGBoost não utilizou "
-        "essas amostras de teste."
-    )
-    print(
-        "Nenhum modelo foi alterado ou promovido."
-    )
+    
 
 
 if __name__ == "__main__":

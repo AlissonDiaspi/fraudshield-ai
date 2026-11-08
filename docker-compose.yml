@@ -1,8 +1,8 @@
 
 services:
-  # ==========================================
+  
   # POSTGRESQL
-  # ==========================================
+  
   postgres:
     image: postgres:16-alpine
     container_name: fraudshield-postgres
@@ -27,9 +27,9 @@ services:
       timeout: 5s
       retries: 5
 
-  # ==========================================
+  
   # APACHE KAFKA
-  # ==========================================
+  
   kafka:
     image: apache/kafka:4.1.0
     container_name: fraudshield-kafka
@@ -75,9 +75,9 @@ services:
       retries: 10
       start_period: 30s
 
-  # ==========================================
+  
   # PROMETHEUS
-  # ==========================================
+  
   prometheus:
     image: prom/prometheus:v3.5.0
     container_name: fraudshield-prometheus
@@ -109,9 +109,9 @@ services:
       retries: 5
       start_period: 15s
 
-  # ==========================================
+  
   # GRAFANA
-  # ==========================================
+  
   grafana:
     image: grafana/grafana:12.1.1
     container_name: fraudshield-grafana
@@ -143,9 +143,9 @@ services:
       retries: 5
       start_period: 30s
 
-  # ==========================================
+  
   # MLFLOW
-  # ==========================================
+  
   mlflow:
     build:
       context: .
@@ -176,9 +176,9 @@ services:
       - --allowed-hosts
       - localhost,localhost:5000,127.0.0.1,127.0.0.1:5000,mlflow,mlflow:5000
 
-  # ==========================================
+  
   # FASTAPI
-  # ==========================================
+  
   api:
     build:
       context: .
@@ -213,9 +213,9 @@ services:
       - "8000"
 
       
-  # ==========================================
+  
   # NEXT.JS FRONTEND
-  # ==========================================
+  
   web:
     build:
       context: .
@@ -236,9 +236,9 @@ services:
         condition: service_started
 
 
-# ==========================================
+
 # VOLUMES PERSISTENTES
-# ==========================================
+
 volumes:
   fraudshield_postgres_data:
   fraudshield_kafka_data:

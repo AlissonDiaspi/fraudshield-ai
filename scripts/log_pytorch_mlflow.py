@@ -165,7 +165,7 @@ def main():
     serialization_format="pickle",
 )
 
-        print("\n=== MLFLOW ===")
+        print("\nMflow:")
         print("Experimento registrado com sucesso.")
         print("Run ID:", run.info.run_id)
         print("Tracking URI:", tracking_uri)

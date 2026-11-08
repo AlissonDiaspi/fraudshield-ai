@@ -14,7 +14,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 
 def main():
-    print("=== FRAUDSHIELD AI — TESTE POSTGRESQL ===")
+    print("Teste postgre")
 
     username = os.environ["POSTGRES_USER"]
     password = os.environ["POSTGRES_PASSWORD"]

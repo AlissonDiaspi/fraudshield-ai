@@ -143,7 +143,7 @@ def main():
 
     print("\nTreinamento concluído!")
     print(f"MLflow Run ID: {run_id}")
-    print("Tracking UI: http://127.0.0.1:5000")
+    print("Tracking UI: http://127.0.0.1:5001")
     return run_id
 
 

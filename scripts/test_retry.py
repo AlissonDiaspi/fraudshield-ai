@@ -42,7 +42,7 @@ def main():
     )
 
     print("\n" + "=" * 50)
-    print("FRAUDSHIELD AI - TESTE DE RETRY")
+    print("Teste de retry")
     print("=" * 50)
     print(result)
     print(f"Total de tentativas: {attempts}")

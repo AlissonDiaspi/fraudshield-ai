@@ -18,7 +18,7 @@ def main() -> None:
 
     save_baseline(baseline, output_path)
 
-    print("\n=== FRAUDSHIELD AI — DRIFT BASELINE ===")
+    
     print(f"Dataset: {baseline['dataset']}")
     print(f"Features: {len(baseline['features'])}")
     print(f"Intervalos solicitados: {baseline['bins']}")

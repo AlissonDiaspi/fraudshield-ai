@@ -38,10 +38,7 @@ def main():
 
     print("Mensagem inválida enviada.")
 
-    # A mensagem válida usa as mesmas features
-    # esperadas pela API. Para evitar depender de
-    # dados fictícios, reutilizamos uma transação
-    # real do dataset do projeto.
+    
     import pandas as pd
 
     dataset = pd.read_csv(

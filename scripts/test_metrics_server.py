@@ -10,7 +10,7 @@ from fraudshield.monitoring.service import (
 
 
 def main():
-    print("\n=== FRAUDSHIELD METRICS TEST ===")
+    print("\nMetrics Test")
 
     start_metrics_server(port=8001)
 
@@ -37,7 +37,7 @@ def main():
     print("\nEndpoint disponivel:")
     print("http://localhost:8001/metrics")
 
-    print("\nPressione Ctrl+C para encerrar.")
+    
 
     try:
         while True:
